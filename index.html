@@ -1,0 +1,149 @@
+
+<style>
+	
+  button {
+    cursor: none; 
+  }
+  
+</style>
+
+<script>
+    
+// ----------------------------------------
+// Центрирование липкого окна по вертикали с дополнительным отступом
+// ----------------------------------------
+
+// Callback функция, которая выполняется после полной загрузки страницы и при изменении размера окна
+function onPageLoad() {
+    console.log('onPageLoad called');
+
+    // Функция для получения высоты окна с использованием window.innerHeight
+    function getWindowHeight() {
+        return window.innerHeight;
+    }
+
+    // Функция для получения высоты элемента с использованием offsetHeight
+    function getElementHeightUsingOffset(elementId) {
+        // Найти элемент по ID
+        var element = document.getElementById(elementId);
+        
+        if (element) {
+            // Получить высоту элемента
+            return element.offsetHeight;
+        } else {
+            console.error('Элемент с ID ' + elementId + ' не найден');
+            return null;
+        }
+    }
+
+    // Функция для получения высоты элемента по классу
+    function getElementHeightByClass(className) {
+        var element = document.querySelector('.' + className);
+        
+        if (element) {
+            return element.offsetHeight;
+        } else {
+            console.error('Элемент с классом ' + className + ' не найден');
+            return 0;
+        }
+    }
+
+    // Функция для установки верхнего отступа для липкого элемента
+    function setStickyTopOffset(elementId, topOffset) {
+        // Найти элемент по ID
+        var element = document.getElementById(elementId);
+        
+        if (element) {
+            // Установить значение свойства 'top'
+            element.style.top = topOffset + 'px';
+        } else {
+            console.error('Элемент с ID ' + elementId + ' не найден');
+        }
+    }
+
+    var elementHeight = getElementHeightUsingOffset('monitor_screen');
+    var viewportHeight = getWindowHeight();
+    var headerHeight = getElementHeightByClass('header'); // Получить высоту элемента с классом header
+
+    if (elementHeight !== null) {
+        var availableHeight = viewportHeight - headerHeight;
+        var offsetHeight = (availableHeight - elementHeight) / 2 + headerHeight;
+
+        // Добавить дополнительный отступ сверху, чтобы элемент не пересекался с заголовком
+        var additionalTopOffset = 10; // Например, 10 пикселей
+        setStickyTopOffset('monitor_screen', offsetHeight + additionalTopOffset);
+    }
+}
+
+// Привязать callback функцию к событию загрузки окна
+window.addEventListener('load', onPageLoad);
+
+// Привязать callback функцию к событию изменения размера окна
+window.addEventListener('resize', onPageLoad);
+
+
+// --------------------------------
+// Воспроизведение видео при прокрутке
+// --------------------------------
+
+document.addEventListener('DOMContentLoaded', () => {
+    const offsetPercentTop = 30; // Установить желаемый процент смещения для верхней границы
+    const offsetPercentBottom = 40; // Установить желаемый процент смещения для нижней границы
+
+    const monitorWindow = document.querySelector('.monitor_window-webflow');
+    const monitorTrack = document.querySelector('.monitor_track');
+    
+    if (monitorWindow && monitorTrack) {
+      // Найти видеоэлемент внутри контейнера .monitor_window-webflow
+      const videoElement = monitorWindow.querySelector('div > video');
+      
+      if (videoElement) {
+        const updateVideoTime = () => {
+          const videoDuration = videoElement.duration;
+          
+          if (videoDuration) {
+            const trackRect = monitorTrack.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            // Вычислить процент элемента, который был прокручен в видимую область
+            let scrollFraction = (windowHeight - trackRect.top) / (windowHeight + trackRect.height);
+            scrollFraction = Math.max(0, Math.min(scrollFraction, 1)); // Ограничить значение между 0 и 1
+
+            // Преобразовать смещения из процентов в доли
+            const offsetFractionTop = offsetPercentTop / 100;
+            const offsetFractionBottom = offsetPercentBottom / 100;
+
+            // Корректировать scrollFraction с учетом верхнего и нижнего смещений
+            if (scrollFraction > offsetFractionTop && scrollFraction < (1 - offsetFractionBottom)) {
+              scrollFraction = (scrollFraction - offsetFractionTop) / (1 - offsetFractionTop - offsetFractionBottom);
+            } else {
+              scrollFraction = 0;
+            }
+
+            const videoTime = scrollFraction * videoDuration;
+            videoElement.currentTime = videoTime;
+          }
+        };
+
+        // Обновлять видео при прокрутке
+        window.addEventListener('scroll', updateVideoTime);
+
+        // Обновить видео при загрузке страницы
+        updateVideoTime();
+
+        // Обновить видео при изменении размера окна
+        window.addEventListener('resize', updateVideoTime);
+
+        // Обновить видео при загрузке метаданных
+        videoElement.addEventListener('loadedmetadata', updateVideoTime);
+      } else {
+        console.error('Видеоэлемент не найден внутри .monitor_window-webflow');
+      }
+    } else {
+      console.error('.monitor_window-webflow или .monitor_track элемент не найден');
+    }
+  });
+
+
+
+</script>
