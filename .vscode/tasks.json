@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Rsync to VPS",
+            "type": "shell",
+            "command": "rsync",
+            "args": [
+                "-avz",
+                "${workspaceFolder}/",
+                "--exclude='.vscode'",
+                "--exclude='.git'",
+                "--exclude='.DS_Store'",
+                "--exclude='.gitignor'",
+                "root@myserver:/var/www/static/projects/my_portfolio/"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "never",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": false
+            },
+            "dependsOn": ["Play Mail Sound"]
+        },
+        {
+            "label": "Play Mail Sound",
+            "type": "shell",
+            "command": "afplay",
+            "args": [
+                "/System/Library/Sounds/Submarine.aiff"  // Звук отправки почты
+            ],
+            "presentation": {
+                "reveal": "never"
+            }
+        }
+    ]
+}
