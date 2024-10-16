@@ -1,0 +1,14 @@
+body {
+    cursor: none; /* Hide the default cursor */
+}
+
+.custom-cursor {
+    width: 30px;
+    height: 30px;
+    border: 2px solid black;
+    border-radius: 50%;
+    position: absolute;
+    pointer-events: none; /* Prevent the custom cursor from interfering with mouse events */
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
