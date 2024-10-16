@@ -1,5 +1,10 @@
-body {
-    cursor: none; /* Hide the default cursor */
+::selection {
+    background-color: #ff8c00;
+    color: white; /* Optional: change text color for better contrast */
+}
+
+/* body {
+    cursor: none; 
 }
 
 .custom-cursor {
@@ -8,7 +13,7 @@ body {
     border: 2px solid black;
     border-radius: 50%;
     position: absolute;
-    pointer-events: none; /* Prevent the custom cursor from interfering with mouse events */
+    z-index: 9999;
+    pointer-events: none; 
     transform: translate(-50%, -50%);
-    transition: width 0.3s ease, height 0.3s ease;
-}
+} */
