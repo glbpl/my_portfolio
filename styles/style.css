@@ -3,6 +3,14 @@
     color: white; /* Optional: change text color for better contrast */
 }
 
+.works_custom-cursor {
+    pointer-events: none;
+}
+
+.custom-cursor {
+    pointer-events: none;
+}
+
 /* body {
     cursor: none; 
 }
