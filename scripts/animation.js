@@ -198,34 +198,34 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  // Animate Work Poster when mouse enter and leave
-  {
-    const workWrappers = document.querySelectorAll(".work-wrapper");
+  // // Animate Work Poster when mouse enter and leave
+  // {
+  //   const workWrappers = document.querySelectorAll(".work-wrapper");
 
-    workWrappers.forEach((wrapper) => {
-      const workPoster = wrapper.querySelector(".work-poster");
+  //   workWrappers.forEach((wrapper) => {
+  //     const workPoster = wrapper.querySelector(".work-poster");
 
-      // Анимация на наведение
-      wrapper.addEventListener("mouseenter", () => {
-        gsap.to(workPoster, {
-          width: "100%",
-          marginTop: "0px",
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      });
+  //     // Анимация на наведение
+  //     wrapper.addEventListener("mouseenter", () => {
+  //       gsap.to(workPoster, {
+  //         width: "100%",
+  //         marginTop: "0px",
+  //         duration: 0.3,
+  //         ease: "power2.out",
+  //       });
+  //     });
 
-      // Анимация на уход курсора
-      wrapper.addEventListener("mouseleave", () => {
-        gsap.to(workPoster, {
-          width: "80%",
-          marginTop: "10%",
-          duration: 0.3,
-          ease: "power2.out",
-        });
-      });
-    });
-  }
+  //     // Анимация на уход курсора
+  //     wrapper.addEventListener("mouseleave", () => {
+  //       gsap.to(workPoster, {
+  //         width: "80%",
+  //         marginTop: "10%",
+  //         duration: 0.3,
+  //         ease: "power2.out",
+  //       });
+  //     });
+  //   });
+  // }
   
   // GSDevTools.create();
 });
