@@ -31,7 +31,7 @@ function createRoundedSquarePath(width, height, borderRadius) {
 }
 
 /**
- * Создаем 3d карточки которые поворачиваются при движении курсора на них и меняем вид самого курсора
+ * Преобразуем карточки портфолио в 3d карточки которые поворачиваются при движении курсора на них и меняем вид самого курсора
  * @param {string} cardsClass - Название класса карточек которые нужно преобразовать
  * @param {string} cardsCursorSelector - Селектор курсора который будет появляться при навидении на карточку
  * @param {string} pageCursorSelector - Селектор курсора всего документа
@@ -86,13 +86,28 @@ function create3dCards(cardsClass, cardsCursorSelector, pageCursorSelector) {
   });
 }
 
+/**
+ * Создаем движение кастомного курсора для всей страницы
+ * @param {string} pageCursorSelector - Селектор курсора всего документа
+ */
+function createCustomCursor(pageCursorSelector) {
+  const customCursorSVG = document.querySelector(pageCursorSelector);
+  const body = document.querySelector("body");
+
+  // Курсор для всей страницы (круг)
+  body.addEventListener("mousemove", (e) => {
+    customCursorSVG.style.left = `${e.clientX}px`; // Позиционируем по X
+    customCursorSVG.style.top = `${e.clientY}px`; // Позиционируем по Y
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   // Убедись, что плагины GSAP подключены, если они не подключены через CDN или локально
   gsap.registerPlugin(MorphSVGPlugin, InertiaPlugin);
 
+  createCustomCursor(".custom-cursor");
   create3dCards(".work-wrapper", ".works_custom-cursor", ".custom-cursor");
 
-  const body = document.querySelector("body");
   const magnetLinks = document.querySelectorAll(".magnet-link");
 
   // Конвертируем элемент-курсор circle в path
@@ -101,15 +116,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Кастомные курсоры на странице
 
-  const customCursorSVG = document.querySelector(".custom-cursor");
   const customCursorPath = document.querySelector(".custom-cursor path");
   // const customCursorPath = document.querySelector(".custom-cursor circle");
-
-  // Курсор для всей страницы (круг)
-  body.addEventListener("mousemove", (e) => {
-    customCursorSVG.style.left = `${e.clientX}px`; // Позиционируем по X
-    customCursorSVG.style.top = `${e.clientY}px`; // Позиционируем по Y
-  });
 
   // Морфинг курсора и прилипание к ссылкам .magnet-link
 
