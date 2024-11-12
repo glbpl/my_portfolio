@@ -27,14 +27,16 @@
                 "showReuseMessage": false,
                 "clear": false
             },
-            "dependsOn": ["Play Mail Sound"]
+            "dependsOn": [
+                "Play Mail Sound"
+            ]
         },
         {
             "label": "Play Mail Sound",
             "type": "shell",
             "command": "afplay",
             "args": [
-                "/System/Library/Sounds/Submarine.aiff"  // Звук отправки почты
+                "/System/Library/Sounds/Submarine.aiff"
             ],
             "presentation": {
                 "reveal": "never"

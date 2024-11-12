@@ -3,10 +3,12 @@
     color: white; /* Optional: change text color for better contrast */
 }
 
+/* TODO: remove to cursor.css */
 .works_custom-cursor {
     pointer-events: none;
 }
 
+/* TODO: remove to cursor.css */
 .custom-cursor {
     pointer-events: none;
 }

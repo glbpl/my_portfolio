@@ -1,22 +1,47 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // Убедись, что плагины GSAP подключены, если они не подключены через CDN или локально
-  gsap.registerPlugin(MorphSVGPlugin, InertiaPlugin);
+/**
+ * Создает SVG path элемент в виде квадрата с закругленными углами.
+ * @param {number} width - Ширина квадрата
+ * @param {number} height - Высота квадрата
+ * @param {number} borderRadius - Радиус скругления углов
+ * @returns {SVGPathElement} - Path элемент с заданной формой
+ */
+function createRoundedSquarePath(width, height, borderRadius) {
+  // Создаем путь SVG для квадрата с закругленными углами
+  const squarePath = `
+    M ${borderRadius},0
+    H ${width - borderRadius}
+    Q ${width},0 ${width},${borderRadius}
+    V ${height - borderRadius}
+    Q ${width},${height} ${width - borderRadius},${height}
+    H ${borderRadius}
+    Q 0,${height} 0,${height - borderRadius}
+    V ${borderRadius}
+    Q 0,0 ${borderRadius},0
+    Z
+  `;
 
-  const wrappers = document.querySelectorAll(".work-wrapper");
-  const body = document.querySelector("body");
+  // Создаем элемент path
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", squarePath);
+  path.setAttribute("fill", "lightblue"); // Цвет заливки (можно изменить при необходимости)
+  path.setAttribute("stroke", "blue"); // Цвет обводки (можно изменить при необходимости)
+  path.setAttribute("stroke-width", "2"); // Толщина обводки (можно изменить при необходимости)
 
-  // Кастомные курсоры на странице
-  const customWorksCursor = document.querySelector(".works_custom-cursor");
-  const customCursor = document.querySelector(".custom-cursor");
+  return path;
+}
 
-  // Курсор для всей страницы
-  body.addEventListener("mousemove", (e) => {
-    customCursor.style.left = `${e.clientX}px`; // Позиционируем по X
-    customCursor.style.top = `${e.clientY}px`; // Позиционируем по Y
-  });
+/**
+ * Создаем 3d карточки которые поворачиваются при движении курсора на них и меняем вид самого курсора
+ * @param {string} cardsClass - Название класса карточек которые нужно преобразовать
+ * @param {string} cardsCursorSelector - Селектор курсора который будет появляться при навидении на карточку
+ * @param {string} pageCursorSelector - Селектор курсора всего документа
+ */
+function create3dCards(cardsClass, cardsCursorSelector, pageCursorSelector) {
+  const maxRotation = 15; // Определяем максимальный угол наклона карточки
 
-  // Определяем максимальный угол наклона
-  const maxRotation = 15;
+  const wrappers = document.querySelectorAll(cardsClass);
+  const customWorksCursor = document.querySelector(cardsCursorSelector);
+  const customCursorSVG = document.querySelector(pageCursorSelector);
 
   // Обходим все элементы .work-wrapper и добавляем обработчики событий
   wrappers.forEach((wrapper) => {
@@ -25,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const rect = wrapper.getBoundingClientRect();
 
       customWorksCursor.style.display = "block"; // Показываем кастомный курсор
-      customCursor.style.display = "none";
+      customCursorSVG.style.display = "none";
       customWorksCursor.style.left = `${e.clientX}px`; // Позиционируем по X
       customWorksCursor.style.top = `${e.clientY}px`; // Позиционируем по Y
 
@@ -56,9 +81,85 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       customWorksCursor.style.display = "none"; // Скрываем кастомный курсор, когда мышь покидает элемент
-      customCursor.style.display = "block";
+      customCursorSVG.style.display = "block";
     });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Убедись, что плагины GSAP подключены, если они не подключены через CDN или локально
+  gsap.registerPlugin(MorphSVGPlugin, InertiaPlugin);
+
+  create3dCards(".work-wrapper", ".works_custom-cursor", ".custom-cursor");
+
+  const body = document.querySelector("body");
+  const magnetLinks = document.querySelectorAll(".magnet-link");
+
+  // Конвертируем элемент-курсор circle в path
+  MorphSVGPlugin.convertToPath(".custom-cursor circle");
+  // MorphSVGPlugin.convertToPath(".custom-cursor rect");
+
+  // Кастомные курсоры на странице
+
+  const customCursorSVG = document.querySelector(".custom-cursor");
+  const customCursorPath = document.querySelector(".custom-cursor path");
+  // const customCursorPath = document.querySelector(".custom-cursor circle");
+
+  // Курсор для всей страницы (круг)
+  body.addEventListener("mousemove", (e) => {
+    customCursorSVG.style.left = `${e.clientX}px`; // Позиционируем по X
+    customCursorSVG.style.top = `${e.clientY}px`; // Позиционируем по Y
   });
 
   // Морфинг курсора и прилипание к ссылкам .magnet-link
+
+  // Применяем эффект прилипания и изменения формы к каждой ссылке
+  magnetLinks.forEach((link) => {
+    // При наведении на ссылку
+    link.addEventListener("mouseenter", () => {
+      const linkRect = link.getBoundingClientRect();
+
+      // Создаем строку для path, представляющего прямоугольник
+      // const rectPath = `M0 0 H${linkRect.width + 20} V${
+      //   linkRect.height + 10
+      // } H0 Z`;
+
+      // Анимация "прилипания" и трансформации с помощью MorphSVG
+      gsap.to(customCursorSVG, {
+        left: linkRect.left + "px",
+        top: linkRect.top + "px",
+        duration: 0.3,
+        ease: "power1.out",
+        // inertia: {
+        //   left: linkRect.left,
+        //   top: linkRect.top,
+        //   resistance: 15,
+        // },
+
+        // backgroundColor: "#ff6600",
+      });
+
+      gsap.to(customCursorPath, {
+        morphSVG: {
+          shape: "<rect>",
+          width: linkRect.width + 20, // Делаем курсор чуть больше ссылки
+          height: linkRect.height + 10, // Делаем курсор чуть выше ссылки
+          borderRadius: "12px", // Закругленные углы
+        },
+      });
+    });
+
+    // Когда  курсор покидает ссылку
+    // link.addEventListener("mouseleave", () => {
+    //   // Возвращаем курсор в исходное состояние (круг)
+    //   gsap.to(customCursorPath, {
+    //     clearProps: "width,height",
+    //     borderRadius: "50%",
+    //     backgroundColor: "#ff6600",
+    //     duration: 0.3,
+    //     ease: "power1.out",
+    //     morphSVG: { type: "circle" },
+    //   });
+    // });
+  });
 });
