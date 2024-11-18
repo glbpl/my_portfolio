@@ -91,46 +91,97 @@ function create3dCards(cardsClass, cardsCursorSelector, pageCursorSelector) {
  * @param {string} pageCursorSelector - Селектор курсора всего документа
  */
 function createCustomCursor(pageCursorSelector) {
-  const customCursorSVG = document.querySelector(pageCursorSelector);
+  let customCursorSVG = document.querySelector(pageCursorSelector);
   const body = document.querySelector("body");
+  let cursorFixed = false; // Флаг для фиксации курсора
+
+  resizeSVGToFitContent(customCursorSVG);
 
   // Курсор для всей страницы (круг)
   body.addEventListener("mousemove", (e) => {
-    customCursorSVG.style.left = `${e.clientX}px`; // Позиционируем по X
-    customCursorSVG.style.top = `${e.clientY}px`; // Позиционируем по Y
+    if (!cursorFixed) {
+      customCursorSVG.style.left = `${e.clientX}px`; // Позиционируем по X
+      customCursorSVG.style.top = `${e.clientY}px`; // Позиционируем по Y
+    }
   });
+
+  // Функции для фиксации и разблокировки курсора
+  const fixCursor = () => {
+    cursorFixed = true;
+  };
+
+  const releaseCursor = () => {
+    cursorFixed = false;
+  };
+
+  // Возвращаем функции фиксации и разблокировки
+  return { fixCursor, releaseCursor };
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  // Убедись, что плагины GSAP подключены, если они не подключены через CDN или локально
-  gsap.registerPlugin(MorphSVGPlugin, InertiaPlugin);
+/**
+ * Функция меняет размер svg под размер его содержимого
+ * @param {svg} svg
+ * @returns {svg}
+ */
+function resizeSVGToFitContent(svg, width = null, height = null) {
+  // Получаем размеры содержимого внутри SVG
+  const bbox = svg.getBBox();
 
-  createCustomCursor(".custom-cursor");
-  create3dCards(".work-wrapper", ".works_custom-cursor", ".custom-cursor");
+  // Если заданы параметры width и height, используем их
+  if (width !== null && height !== null) {
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+  } else {
+    // Если width и height не заданы, подстраиваем размеры под содержимое
+    svg.setAttribute("width", bbox.width);
+    svg.setAttribute("height", bbox.height);
+  }
 
-  const magnetLinks = document.querySelectorAll(".magnet-link");
+  // Устанавливаем viewBox, чтобы подогнать видимую область под содержимое
+  svg.setAttribute(
+    "viewBox",
+    `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
+  );
+
+  // Возвращаем обновленный SVG
+  return svg;
+}
+
+/**
+ * Делаем прилипание к ссылкам и преобразуем указатель
+ * @param {string} linksClass - Название класса ссылок на которох будет прилипание и преобразование
+ * @param {string} cursorSelector - Класс указателя
+ */
+function createMagicCursor(linksClass, cursorSelector) {
+  const magnetLinks = document.querySelectorAll(linksClass);
+  const customCursorSVG = document.querySelector(cursorSelector);
+
+  // Вызов createCustomCursor внутри createMagicLinks
+  const { fixCursor, releaseCursor } = createCustomCursor(cursorSelector);
 
   // Конвертируем элемент-курсор circle в path
-  MorphSVGPlugin.convertToPath(".custom-cursor circle");
-  // MorphSVGPlugin.convertToPath(".custom-cursor rect");
+  MorphSVGPlugin.convertToPath(`${cursorSelector} circle`);
 
-  // Кастомные курсоры на странице
+  const customCursorPath = document.querySelector(`${cursorSelector} path`);
 
-  const customCursorPath = document.querySelector(".custom-cursor path");
-  // const customCursorPath = document.querySelector(".custom-cursor circle");
-
-  // Морфинг курсора и прилипание к ссылкам .magnet-link
-
-  // Применяем эффект прилипания и изменения формы к каждой ссылке
+  // Перебираем все ссылки
   magnetLinks.forEach((link) => {
-    // При наведении на ссылку
     link.addEventListener("mouseenter", () => {
       const linkRect = link.getBoundingClientRect();
 
-      // Создаем строку для path, представляющего прямоугольник
-      // const rectPath = `M0 0 H${linkRect.width + 20} V${
-      //   linkRect.height + 10
-      // } H0 Z`;
+      // Создаем прямоугольник
+      const rectPath = createRoundedSquarePath(
+        linkRect.width,
+        linkRect.height,
+        10
+      );
+
+      // Фиксируем курсор
+      fixCursor();
+
+      // TODO: Узнать подробнее как работает параметр ViewBox в SVG
+      // Изменяем размер SVG под рамзер прямоугольника
+      resizeSVGToFitContent(customCursorSVG, linkRect.width, linkRect.height);
 
       // Анимация "прилипания" и трансформации с помощью MorphSVG
       gsap.to(customCursorSVG, {
@@ -139,35 +190,39 @@ document.addEventListener("DOMContentLoaded", function () {
         duration: 0.3,
         ease: "power1.out",
         // inertia: {
-        //   left: linkRect.left,
-        //   top: linkRect.top,
         //   resistance: 15,
         // },
-
-        // backgroundColor: "#ff6600",
       });
 
       gsap.to(customCursorPath, {
+        duration: 0.8,
+        ease: "power1.out",
         morphSVG: {
-          shape: "<rect>",
-          width: linkRect.width + 20, // Делаем курсор чуть больше ссылки
-          height: linkRect.height + 10, // Делаем курсор чуть выше ссылки
-          borderRadius: "12px", // Закругленные углы
+          shape: rectPath,
         },
       });
     });
 
     // Когда  курсор покидает ссылку
-    // link.addEventListener("mouseleave", () => {
-    //   // Возвращаем курсор в исходное состояние (круг)
-    //   gsap.to(customCursorPath, {
-    //     clearProps: "width,height",
-    //     borderRadius: "50%",
-    //     backgroundColor: "#ff6600",
-    //     duration: 0.3,
-    //     ease: "power1.out",
-    //     morphSVG: { type: "circle" },
-    //   });
-    // });
+    link.addEventListener("mouseleave", () => {
+      // Возвращаем курсор в исходное состояние
+      // releaseCursor();
+
+      // Возвращаем курсор в исходное состояние (круг)
+      gsap.to(customCursorPath, {
+        duration: 0.8,
+        ease: "power1.out",
+        morphSVG: { shape: customCursorPath },
+      });
+    });
   });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Убедись, что плагины GSAP подключены, если они не подключены через CDN или локально
+  gsap.registerPlugin(MorphSVGPlugin, InertiaPlugin);
+
+  // createCustomCursor(".custom-cursor");
+  create3dCards(".work-wrapper", ".works_custom-cursor", ".custom-cursor");
+  createMagicCursor(".magnet-link", ".custom-cursor");
 });
