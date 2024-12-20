@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   gsap.registerPlugin(GSDevTools);
   gsap.registerPlugin(ScrambleTextPlugin);
 
+  // For test commit
   // Animate Hero page Text and Marquee
   {
     // Animate Text of Hero page
