@@ -1,3 +1,6 @@
+// TODO: Перенести функционал в класс
+// TODO: Сделать генерацию курсоров в коде и вставлять их в DOM
+
 /**
  * Преобразуем карточки портфолио в 3d карточки которые поворачиваются при движении курсора на них и меняем вид самого курсора
  * @param {string} cardsClass - Название класса карточек которые нужно преобразовать
@@ -69,6 +72,11 @@ function createCustomCursor(pageCursorSelector) {
   });
 }
 
+/**
+ * Анимация курсора при движении над ссылкой
+ * @param {string} pageCursorSelector
+ * @param {string} magnetLinksSelector
+ */
 function hoverCursorAnimation(pageCursorSelector, magnetLinksSelector) {
   const magnetLinks = document.querySelectorAll(magnetLinksSelector);
 
@@ -97,10 +105,7 @@ function hoverCursorAnimation(pageCursorSelector, magnetLinksSelector) {
 
 document.addEventListener("DOMContentLoaded", function () {
   // Убедись, что плагины GSAP подключены, если они не подключены через CDN или локально
-
   createCustomCursor(".custom-cursor");
   hoverCursorAnimation(".custom-cursor", ".magnet-link");
   create3dCards(".work-wrapper", ".works_custom-cursor", ".custom-cursor");
 });
-
-
