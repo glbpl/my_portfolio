@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   gsap.registerPlugin(GSDevTools);
   gsap.registerPlugin(ScrambleTextPlugin);
 
-  // For test commit
+  // Test commit-2 
   // Animate Hero page Text and Marquee
   {
     // Animate Text of Hero page
@@ -199,34 +199,4 @@ document.addEventListener("DOMContentLoaded", function () {
     );
   }
 
-  // // Animate Work Poster when mouse enter and leave
-  // {
-  //   const workWrappers = document.querySelectorAll(".work-wrapper");
-
-  //   workWrappers.forEach((wrapper) => {
-  //     const workPoster = wrapper.querySelector(".work-poster");
-
-  //     // Анимация на наведение
-  //     wrapper.addEventListener("mouseenter", () => {
-  //       gsap.to(workPoster, {
-  //         width: "100%",
-  //         marginTop: "0px",
-  //         duration: 0.3,
-  //         ease: "power2.out",
-  //       });
-  //     });
-
-  //     // Анимация на уход курсора
-  //     wrapper.addEventListener("mouseleave", () => {
-  //       gsap.to(workPoster, {
-  //         width: "80%",
-  //         marginTop: "10%",
-  //         duration: 0.3,
-  //         ease: "power2.out",
-  //       });
-  //     });
-  //   });
-  // }
-  
-  // GSDevTools.create();
 });
