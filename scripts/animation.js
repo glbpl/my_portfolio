@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
   gsap.registerPlugin(GSDevTools);
   gsap.registerPlugin(ScrambleTextPlugin);
 
-  // Test commit-2 
   // Animate Hero page Text and Marquee
   {
     // Animate Text of Hero page
@@ -198,5 +197,13 @@ document.addEventListener("DOMContentLoaded", function () {
       "<"
     );
   }
+
+  // Initialization Swaper.js for section of "What my clients are saying"
+  const swiper = new Swiper('.swiper', {
+
+    effect: "cards",
+    grabCursor: false,
+
+  });
 
 });
