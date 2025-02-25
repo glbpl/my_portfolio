@@ -1,4 +1,4 @@
-// TODO: Перенести функционал в класс
+// TODO: Перенести функционал в класс чтобы курсор стал объектом
 // TODO: Сделать генерацию курсоров в коде и вставлять их в DOM
 
 /**
@@ -85,7 +85,7 @@ function hoverCursorAnimation(pageCursorSelector, magnetLinksSelector) {
     link.addEventListener("mouseenter", () => {
       // Включаем анимацию GSAP для курсора
       gsap.to(pageCursorSelector, {
-        scale: 2, // Увеличиваем размер курсора
+        scale: 1.5, // Увеличиваем размер курсора
         duration: 0.3, // Длительность анимации
         ease: "power1.out", // Плавное изменение
       });
@@ -103,9 +103,35 @@ function hoverCursorAnimation(pageCursorSelector, magnetLinksSelector) {
   });
 }
 
+/**
+ * Изменение курсора при нажатии кнопки мыши
+ * @param {string} pageCursorSelector - Селектор курсора всего документа
+ */
+function pressMouseButton(pageCursorSelector) {
+  // При нажатии кнопки мыши
+  document.addEventListener("mousedown", () => {
+    gsap.to(pageCursorSelector, {
+      scale: 0.3, // Уменьшаем размер курсора
+      duration: 0.3, // Длительность анимации
+      ease: "power1.out", // Плавное изменение
+    });
+  });
+
+  // При отпускании кнопки мыши
+  document.addEventListener("mouseup", () => {
+    gsap.to(pageCursorSelector, {
+      scale: 1, // Возвращаем исходный размер
+      duration: 0.3, // Длительность анимации
+      ease: "power1.out", // Плавное изменение
+    });
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   // Убедись, что плагины GSAP подключены, если они не подключены через CDN или локально
   createCustomCursor(".custom-cursor");
   hoverCursorAnimation(".custom-cursor", ".magnet-link");
   create3dCards(".work-wrapper", ".works_custom-cursor", ".custom-cursor");
+  pressMouseButton(".custom-cursor");
 });
+

@@ -206,4 +206,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   });
 
+  // Изменение года в футере
+  const currentYear = new Date().getFullYear();
+
+  // Находим элемент с атрибутом current-year
+  const spanElement = document.querySelector('.footer-curent-year');
+
+  // Заменяем текст внутри элемента на текущий год
+  if (spanElement) {
+    spanElement.textContent = currentYear;
+  }
+
 });

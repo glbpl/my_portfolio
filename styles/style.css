@@ -1,32 +1,40 @@
 ::selection {
-    background-color: #ff8c00;
-    color: white; /* Optional: change text color for better contrast */
+  background-color: #ff8c00;
+  color: white; /* Optional: change text color for better contrast */
 }
 
-button, a {
-    cursor: none;
+body {
+  cursor: none;
 }
+
+* {
+  cursor: none; /* Отключает курсор для всех элементов */
+}
+
+.hidden,
+.tooltip,
+.modal {
+  cursor: none;
+}
+
+a,
+button,
+input,
+textarea,
+select {
+  cursor: none; /* Убирает стандартный курсор для интерактивных элементов */
+}
+
+/* #work-section {
+    scroll-padding-top: 100px;
+} */
 
 .works_custom-cursor {
-    pointer-events: none;
+  pointer-events: none;
 }
 
 .custom-cursor {
-    pointer-events: none;
-    mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
 }
-
-/* body {
-    cursor: none; 
-}
-
-.custom-cursor {
-    width: 30px;
-    height: 30px;
-    border: 2px solid black;
-    border-radius: 50%;
-    position: absolute;
-    z-index: 9999;
-    pointer-events: none; 
-    transform: translate(-50%, -50%);
-} */
