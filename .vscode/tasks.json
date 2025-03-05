@@ -8,10 +8,18 @@
             "args": [
                 "-avz",
                 "${workspaceFolder}/",
+                "--exclude='node_modules'",
                 "--exclude='.vscode'",
                 "--exclude='.git'",
                 "--exclude='.DS_Store'",
-                "--exclude='.gitignor'",
+                "--exclude='.gitignore'",
+                "--exclude='.env'",
+                "--exclude='package.json'",
+                "--exclude='package-lock.json'",
+                "--exclude='npm-debug.log'",
+                "--exclude='yarn.lock'",
+                "--exclude='yarn-error.log'",
+                "--exclude='*.log'",
                 "root@myserver:/var/www/static/projects/my_portfolio/"
             ],
             "group": {
