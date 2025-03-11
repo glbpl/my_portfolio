@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
   gsap.registerPlugin(ScrollTrigger);
   gsap.registerPlugin(GSDevTools);
