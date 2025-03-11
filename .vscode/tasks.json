@@ -2,12 +2,14 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Rsync to VPS",
+            "label": "(rsync) my-portfolio fra1-server",
             "type": "shell",
             "command": "rsync",
             "args": [
                 "-avz",
                 "${workspaceFolder}/",
+                "--delete",
+                "--force",
                 "--exclude='node_modules'",
                 "--exclude='.vscode'",
                 "--exclude='.git'",
