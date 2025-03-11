@@ -198,13 +198,4 @@ document.addEventListener("DOMContentLoaded", function () {
       "<"
     );
   }
-
-  // Initialization Swaper.js for section of "What my clients are saying"
-  const swiper = new Swiper('.swiper', {
-
-    effect: "cards",
-    grabCursor: false,
-
-  });
-
 });
