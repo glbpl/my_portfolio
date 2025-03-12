@@ -1,4 +1,4 @@
-import footerYearChanger from './update-footer-year.js';
+import footerYearChanger from './modules/update-footer-year.js';
 
 // Initialization of the footer year changer plugin
 footerYearChanger.init();
