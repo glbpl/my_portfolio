@@ -1,3 +1,4 @@
+
 function getDeltaBetweenWindows() {
     // Вычисляем перемещение двух мониторов
     // Узнаем ширину Вьюпорат
@@ -9,45 +10,27 @@ function getDeltaBetweenWindows() {
     const widthMonitor = element.getBoundingClientRect().width;
 
     const deltaX = widthViewport - (widthViewport - widthMonitor) / 2 + 1;
-    
+
     return deltaX;
 }
 
-// Анимация монитора при скроле страницы
-export default function animateHeroMonitor() {
+// Сцена движения окон влево и анимация загрузки webflow
+function sceneWindowsLeft() {
 
     const deltaX = getDeltaBetweenWindows();
 
-    const tl = gsap.timeline({
-        scrollTrigger: {
-            trigger: ".monitor",
-            pin: true,
-            start: "center center",
-            end: "+=3000",
-            scrub: 1,
-            markers: false,
-        },
-    });
+    const tl = gsap.timeline();
 
-    // Горизонтальный скролл влево первого монитора
-    tl.to(".monitor_window-portfolio", {
-        x: -deltaX,
-        duration: 5,
-    });
-
-    // Горизонтальный скролл влево второго монитора
-    tl.to(
-        ".monitor_window-webflow",
+    // Горизонтальный скролл влево первого и второго окна 
+    tl.to(".monitor_windows",
         {
-            x: -deltaX,
-            duration: 5,
+            duration: 4,
+            x: "-50%",
         },
-        "<"
     );
 
     // Показываем анимацию прелоудера
-    tl.from(
-        ".monitor_lightning-load",
+    tl.from(".monitor_lightning-load",
         {
             scaleX: 0,
             duration: 4,
@@ -61,6 +44,25 @@ export default function animateHeroMonitor() {
         autoAlpha: 0,
         duration: 0.5,
     });
+
+    return tl;
+}
+
+// Мастер анимация монитора при скроле страницы
+export default function animateHeroMonitor() {
+
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".monitor",
+            pin: true,
+            start: "center center",
+            end: "+=3000",
+            scrub: 1,
+            markers: false,
+        },
+    });
+
+    tl.add(sceneWindowsLeft());
 
     // Скейл окна
     tl.to(".monitor_screen", {
