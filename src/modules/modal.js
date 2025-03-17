@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Добавляем обработчик клика на каждый элемент
         wrapper.addEventListener('click', () => {
             // Получаем значение атрибута work-id у текущего элемента
-            // TODO: Заменить поиск элемента по id на поиск по атрибуту
             const workId = wrapper.getAttribute('work-id');
 
             // Находим внутри works-windows элемент с таким же work-id
