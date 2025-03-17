@@ -1,23 +1,7 @@
 
-function getDeltaBetweenWindows() {
-    // Вычисляем перемещение двух мониторов
-    // Узнаем ширину Вьюпорат
-    let element = document.querySelector(".monitor_viewport");
-    const widthViewport = element.getBoundingClientRect().width;
-
-    // Узнаем ширину Монитора
-    element = document.querySelector(".monitor_window-portfolio");
-    const widthMonitor = element.getBoundingClientRect().width;
-
-    const deltaX = widthViewport - (widthViewport - widthMonitor) / 2 + 1;
-
-    return deltaX;
-}
 
 // Сцена движения окон влево и анимация загрузки webflow
 function sceneWindowsLeft() {
-
-    const deltaX = getDeltaBetweenWindows();
 
     const tl = gsap.timeline();
 
@@ -48,6 +32,117 @@ function sceneWindowsLeft() {
     return tl;
 }
 
+// Сцена скейла окна и его исчезновение как фона
+function sceneScaleWindow() {
+
+    const tl = gsap.timeline();
+
+    tl.to(".monitor_screen", {
+        scale: 4,
+        duration: 4,
+        ease: "power2.in",
+    });
+
+    // Фон окна делаем прозрачным
+    tl.to(".monitor_window-webflow", {
+        backgroundColor: "transparent", // Используем backgroundColor
+        duration: 1,
+    });
+
+    // Ничегонеделание
+    // tl.to(".monitor_screen", {
+    //     duration: 2,
+    // });
+
+    // Исчезновение окна после скейла как фона (оставляем просто белый фон)
+    tl.set(
+        ".monitor_screen-img",
+        {
+            opacity: 0,
+        },
+        "<"
+    ).set(
+        ".background-image-wf",
+        {
+            // backgroundImage: "none",
+            opacity: 0,
+        },
+        "<"
+    );
+
+    return tl;
+}
+
+// Сцена появление контента внутри окна
+function sceneWindowContent() {
+
+    const tl = gsap.timeline();
+
+    // Появление бейджа My Credo
+    tl.from(
+        ".my-credo_block",
+        {
+            border: "1px solid rgba(0, 0, 0, 0)",
+            duration: 0.5,
+        },
+    );
+
+    tl.from(
+        ".my-credo_bage",
+        {
+            opacity: 0,
+            duration: 0.5,
+        },
+        "<"
+    );
+
+    // Появление текста More about me
+    tl.from(
+        ".about-me-more",
+        {
+            opacity: 0,
+            x: -40,
+            duration: 1.5,
+        },
+        "<0.5"
+    );
+
+    // Появление Фото
+    tl.from(
+        ".my-photo",
+        {
+            opacity: 0,
+            x: +40,
+            duration: 1.5,
+        },
+        "<"
+    );
+
+
+
+    // Исчезание бейджа My Credo
+    tl.to(
+        ".my-credo_block",
+        {
+            border: "1px solid rgba(0, 0, 0, 0)",
+            duration: 0.5,
+        },
+        "<70%"
+    );
+
+    tl.to(
+        ".my-credo_bage",
+        {
+            opacity: 0,
+            duration: 0.5,
+        },
+        "<"
+    );
+
+    return tl;
+
+}
+
 // Мастер анимация монитора при скроле страницы
 export default function animateHeroMonitor() {
 
@@ -64,98 +159,8 @@ export default function animateHeroMonitor() {
 
     tl.add(sceneWindowsLeft());
 
-    // Скейл окна
-    tl.to(".monitor_screen", {
-        scale: 4,
-        duration: 4,
-        ease: "power2.in",
-    });
+    tl.add(sceneScaleWindow());
 
-    // Фон окна делаем прозрачным
-    tl.to(".monitor_window-webflow", {
-        backgroundColor: "transparent", // Используем backgroundColor
-        duration: 1,
-    });
+    tl.add(sceneWindowContent(), '<40%');
 
-    // Ничегонеделание
-    tl.to(".monitor_screen", {
-        duration: 2,
-    });
-
-    // Исчезновение окна после скейла как фона (оставляем просто белый фон)
-    tl.set(
-        ".monitor_screen-img",
-        {
-            opacity: 0,
-        },
-        "<"
-    ).set(
-        ".monitor_window-webflow",
-        {
-            backgroundImage: "none",
-        },
-        "<"
-    );
-
-    // Появление текста More about me
-    tl.from(
-        ".about-me-more",
-        {
-            opacity: 0,
-            x: -40,
-            duration: 1,
-        },
-        "7.45"
-    );
-
-    // Появление Фото
-    tl.from(
-        ".my-photo",
-        {
-            opacity: 0,
-            x: +40,
-            duration: 1,
-        },
-        "7.45"
-    );
-
-    // Появление бейджа My Credo
-    tl.from(
-        ".my-credo",
-        {
-            border: "1px solid rgba(0, 0, 0, 0)",
-            duration: 0.5,
-        },
-        "8"
-    );
-
-    tl.from(
-        ".my-credo_bage",
-        {
-            opacity: 0,
-            duration: 0.5,
-        },
-        "<"
-    );
-
-    // Исчезание бейджа My Credo
-    tl.to(
-        ".my-credo",
-        {
-            border: "1px solid rgba(0, 0, 0, 0)",
-            duration: 0.5,
-        },
-        "11"
-    );
-
-    tl.to(
-        ".my-credo_bage",
-        {
-            opacity: 0,
-            duration: 0.5,
-        },
-        "<"
-    );
-
-    return tl;
 }
