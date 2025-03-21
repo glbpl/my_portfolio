@@ -1,6 +1,7 @@
 
 import yearChanger from '@modules/update-footer-year.js';
 import animate from '@animation/master-animation.js';
+import initMarquee from '@modules/marquee';
 
 // Registration of the GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -9,8 +10,11 @@ gsap.registerPlugin(ScrambleTextPlugin);
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Initialization and start animation
+    // Initialize and start animation
     animate();
+
+    // Initialize marquee animation
+    initMarquee(5);
 
     // Initialization of the footer year changer plugin
     yearChanger.updateFooterYear('.footer-curent-year');
